@@ -76,9 +76,19 @@ jobs:
           deb_url="https://github.com/dayanch96/InfusePlus/releases/download/v${{ inputs.tweak_version }}/com.dvntm.infuseplus_${{ inputs.tweak_version }}_iphoneos-arm.deb"
           wget "$deb_url" --no-verbose -O ${{ github.workspace }}/infplus.deb
 
+      - name: Compute checksum (Infuse Plus deb)
+        run: |
+          echo "SHA256 (infplus.deb):"
+          shasum -a 256 ${{ github.workspace }}/infplus.deb
+
       - name: Download Infuse
         id: download_infuse
         run: wget "${{ inputs.ipa_url }}" --no-verbose -O ${{ github.workspace }}/infuse.ipa
+
+      - name: Compute checksum (Infuse IPA)
+        run: |
+          echo "SHA256 (infuse.ipa):"
+          shasum -a 256 ${{ github.workspace }}/infuse.ipa
 
       - name: Inject tweaks into IPA
         run: cyan -i infuse.ipa -o InfusePlus_${{ inputs.tweak_version }}.ipa -uwef infplus.deb -n "${{ inputs.display_name }}" -b ${{ inputs.bundle_id }}
